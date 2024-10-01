@@ -2,18 +2,41 @@ import "./Home.css";
 import useGet from "../../CustomHooks/useGet";
 import Products from "../../Services/Products";
 import { Card, Loading } from "../../Components/index";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 const Home = () => {
   const [loading, data] = useGet(Products.getAllProducts());
   const [val, setVal] = useState("");
   const [wholeProducts, setWholeProducts] = useState([]);
   const [check, setCheck] = useState(false);
 
-  useEffect(() => {
-    if (val === "") {
-      setWholeProducts(
-        data &&
-          data.map((item) => (
+  const filteredProducts = useMemo(() => {
+    if (!val) return data; // إذا كانت القيمة فارغة، ارجع جميع المنتجات
+    return data.filter((product) =>
+      product.category.toLowerCase().includes(val.toLowerCase())
+    );
+  }, [data, check]); // يعتمد على data و val
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setCheck(!check);
+  };
+
+  return (
+    <div className="home">
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={val}
+          onChange={(e) => setVal(e.target.value)}
+          placeholder="Search by category"
+        />
+        <button>Search</button>
+      </form>
+      <div className="meals">
+        {loading == true ? (
+          <Loading />
+        ) : (
+          filteredProducts.map((item) => (
             <div className="col-lg-3 col-md-5 col-sm-12 meal" key={item.id}>
               <Card
                 price={item.price}
@@ -23,47 +46,7 @@ const Home = () => {
               />
             </div>
           ))
-      );
-    } else {
-      setWholeProducts(
-        data &&
-          data.map(
-            (item) =>
-              item.category.includes(val) && (
-                <div className="col-lg-3 col-md-5 col-sm-12 meal" key={item.id}>
-                  <Card
-                    price={item.price}
-                    category={item.category}
-                    img={item.image}
-                    id={item.id}
-                  />
-                </div>
-              )
-          )
-      );
-    }
-  }, [check, data]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setCheck(!check);
-    console.log(val);
-  };
-  return (
-    <div className="home">
-      <form action="" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name=""
-          id=""
-          placeholder="Search an Item"
-          value={val}
-          onChange={(e) => setVal(e.target.value)}
-        />
-        <button>Search</button>
-      </form>
-      <div className="meals">
-        {loading == true ? <Loading /> : wholeProducts}
+        )}
       </div>
     </div>
   );
