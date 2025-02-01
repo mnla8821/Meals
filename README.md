@@ -24,4 +24,4 @@ A List Of Food with simple filter.
 - Bootstrap: For styling the UI.
 
 ## Screenshot 
-![screenshot](src/Assets/swiper.png)
+![screenshot](src/meals.png)
