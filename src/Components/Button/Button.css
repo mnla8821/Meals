@@ -1,0 +1,15 @@
+.btns {
+  background-color: orange;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+  border-radius: 6px;
+  width: fit-content;
+  margin: 0 8px;
+}
+
+.btns:hover {
+  background-color: black;
+  transition: 0.5s;
+}
